@@ -59,3 +59,29 @@ int imprimirHumedadEnSuelo(int selector) {
 * Se crean objetos ***dht11*** y ***lcd*** de las clases ***DHT11*** y ***LiquidCrystal_I2C*** respectivamente.
 * Se define un nuevo carácter personalizado en la LCD (***grado***).
 * Se crean tres funciones (***mensajeDeCortecia***, ***esperaDeDatos***, ***imprimirTemperaturaYHumedad***, ***imprimirHumedadEnSuelo***) relacionadas con la presentación y visualización en la pantalla LCD.
+```cpp
+void setup() {
+  Serial.begin(9600);
+  lcd.init();
+  lcd.backlight();
+  lcd.createChar(0, grado);
+  lcd.home();
+  mensajeDeCortecia();
+  lcd.clear();
+  esperaDeDatos();
+  pinMode(agua, OUTPUT);
+  pinMode(iluminacion, OUTPUT);
+  pinMode(extractor, OUTPUT);
+}
+```
+* Se inicia la comunicación serial a 9600 baudios.
+* Se inicializa la LCD, se configura el carácter personalizado y se muestra un mensaje de bienvenida.
+* Se configuran los pines agua, iluminacion y extractor como salidas.
+```cpp
+void loop() {
+  // ... (lecturas de sensores, clasificación de estados del suelo, y presentación en la LCD)
+}
+```
+En el bucle principal, se realizan lecturas de sensores de temperatura, humedad del aire y humedad del suelo.
+Se clasifican los estados del suelo y se imprime información en la consola serial y en la pantalla LCD.
+La presentación en la LCD alterna entre la temperatura/humedad y el estado del suelo cada 3 segundos.
