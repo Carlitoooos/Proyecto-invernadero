@@ -35,3 +35,27 @@ byte extractor = 5;
 * ***intervalos*** calcula la diferencia entre los valores de aire y agua dividido por 3.
 * ***humedadDelSuelo*** almacenará la lectura analógica del sensor conectado al pin A0.
 * Se definen los pines para controlar agua, iluminación y extractor.
+```cpp
+DHT11 dht11(2);
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+uint8_t grado[8] = { 0xe, 0x11, 0x11, 0xe, 0x0, 0x0, 0x0 };
+
+void mensajeDeCortecia() {
+  // ... (función para mostrar un mensaje de bienvenida en la LCD)
+}
+
+void esperaDeDatos() {
+  // ... (función para mostrar un mensaje de espera en la LCD)
+}
+
+int imprimirTemperaturaYHumedad(int temperatura, int humedad) {
+  // ... (función para imprimir temperatura y humedad en la LCD)
+}
+
+int imprimirHumedadEnSuelo(int selector) {
+  // ... (función para imprimir el estado del suelo en la LCD)
+}
+```
+* Se crean objetos ***dht11*** y ***lcd*** de las clases ***DHT11*** y ***LiquidCrystal_I2C*** respectivamente.
+* Se define un nuevo carácter personalizado en la LCD (***grado***).
+* Se crean tres funciones (***mensajeDeCortecia***, ***esperaDeDatos***, ***imprimirTemperaturaYHumedad***, ***imprimirHumedadEnSuelo***) relacionadas con la presentación y visualización en la pantalla LCD.
