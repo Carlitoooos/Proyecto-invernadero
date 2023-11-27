@@ -28,10 +28,10 @@ byte agua = 7;
 byte iluminacion = 6;
 byte extractor = 5;
 ```
-* Se define una macro printByte que simplifica la llamada a la función write.
+* Se define una macro *printByte* que simplifica la llamada a la función write.
 * Se declaran variables para almacenar valores relacionados con la temperatura, humedad, estado del suelo, etc.
-* **estadosDelSuelo** es un arreglo de strings que representan los estados del suelo.
-* **valorDelAire** y **valorDelAgua** son umbrales utilizados para clasificar el estado del suelo.
-* **intervalos** calcula la diferencia entre los valores de aire y agua dividido por 3.
-* **humedadDelSuelo** almacenará la lectura analógica del sensor conectado al pin A0.
+* *estadosDelSuelo* es un arreglo de strings que representan los estados del suelo.
+* *valorDelAire* y *valorDelAgua* son umbrales utilizados para clasificar el estado del suelo.
+* *intervalos* calcula la diferencia entre los valores de aire y agua dividido por 3.
+* *humedadDelSuelo* almacenará la lectura analógica del sensor conectado al pin A0.
 * Se definen los pines para controlar agua, iluminación y extractor.
