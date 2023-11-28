@@ -18,9 +18,9 @@ const int valorDelAire = 630;
 const int valorDelAgua = 260;
 int intervalos = (valorDelAire - valorDelAgua) / 3;
 unsigned int humedadDelSuelo = 0;
-byte agua = 7;
-byte iluminacion = 6;
-byte extractor = 5;
+byte extractor = 13;
+byte agua = 12;
+byte iluminacion = 8;
 
 /* creacion de objetos necesarios para el proyecto */
 DHT11 dht11(2);
@@ -103,63 +103,75 @@ void setup() {
   pinMode(agua, OUTPUT);
   pinMode(iluminacion, OUTPUT);
   pinMode(extractor, OUTPUT);
+  digitalWrite(iluminacion, true);
 }
 
 /* codigo principal del proyecto */
 void loop() {
-  {
-    /* lectura de datos */
-    humedadDelSuelo = analogRead(A0);      /* leemos la humedad del suelo y la almacenamos en su respectiva variable */
-    temperatura = dht11.readTemperature(); /* leemos temperatura y almacenamos en su variable */
-    delay(500);                            /* esperamos 500ms antes de volver a realizar otra lectura para sincronizar con el protocolo de comunicacion del sensor DHT11*/
-    humedad = dht11.readHumidity();        /* leemos humedad y almacenamos en su variable */
-    delay(500);                            /* volvemos a esperar 500ms para terminar de sincronizar con el protocolo de comunicacion de comunicacion del sensor DHT11 */
 
-    /* verificamos que las lecturas esten correctas y las imprimimos en el monitor serial */
-    if (temperatura != DHT11::ERROR_CHECKSUM && temperatura != DHT11::ERROR_TIMEOUT) {
-      Serial.print("Temperatura: ");
-      Serial.print(temperatura);
-      Serial.println(" °C");
-    } else {
-      Serial.print("Error al leer temperatura: ");
-      Serial.println(DHT11::getErrorString(temperatura));
-    }
-    if (humedad != DHT11::ERROR_CHECKSUM && humedad != DHT11::ERROR_TIMEOUT) {
-      Serial.print("Humedad: ");
-      Serial.print(humedad);
-      Serial.println("% HR");
-    } else {
-      Serial.print("Error al leer humedad: ");
-      Serial.println(DHT11::getErrorString(humedad));
-    }
+  /* lectura de datos */
+  humedadDelSuelo = analogRead(A0);      /* leemos la humedad del suelo y la almacenamos en su respectiva variable */
+  temperatura = dht11.readTemperature(); /* leemos temperatura y almacenamos en su variable */
+  delay(500);                            /* esperamos 500ms antes de volver a realizar otra lectura para sincronizar con el protocolo de comunicacion del sensor DHT11*/
+  humedad = dht11.readHumidity();        /* leemos humedad y almacenamos en su variable */
+  delay(500);                            /* volvemos a esperar 500ms para terminar de sincronizar con el protocolo de comunicacion de comunicacion del sensor DHT11 */
 
-    /* clasificamos estados del suelo en 3 y seleccionamos el que corresponda en el arreglo de caracteres */
-    if (humedadDelSuelo > valorDelAgua && humedadDelSuelo < (valorDelAgua + intervalos)) {
-      Serial.println("Mojado");
-      selector = 2;
-    } else if (humedadDelSuelo > (valorDelAgua + intervalos) && humedadDelSuelo < (valorDelAire - intervalos)) {
-      Serial.println("Humedo");
-      selector = 1;
-    } else if (humedadDelSuelo < valorDelAire && humedadDelSuelo > (valorDelAire - intervalos)) {
-      Serial.println("Seco");
-      selector = 0;
-    }
+  /* verificamos que las lecturas esten correctas y las imprimimos en el monitor serial */
+  if (temperatura != DHT11::ERROR_CHECKSUM && temperatura != DHT11::ERROR_TIMEOUT) {
+    Serial.print("Temperatura: ");
+    Serial.print(temperatura);
+    Serial.println(" °C");
+  } else {
+    Serial.print("Error al leer temperatura: ");
+    Serial.println(DHT11::getErrorString(temperatura));
+  }
+  if (humedad != DHT11::ERROR_CHECKSUM && humedad != DHT11::ERROR_TIMEOUT) {
+    Serial.print("Humedad: ");
+    Serial.print(humedad);
+    Serial.println("% HR");
+  } else {
+    Serial.print("Error al leer humedad: ");
+    Serial.println(DHT11::getErrorString(humedad));
+  }
 
-    /* alternamos la impresion de datos en la pantalla LCD cada 3 segundos */
-    if (contador >= 0 && contador <= 3) {
-      contador++;
-      /* verificamos que las lecturas esten dentro de rangos teoricamente normales e imprimimos en la pantalla LCD */
-      if (temperatura >= 0 && temperatura <= 50 && humedad >= 0 && humedad <= 100) {
-        imprimirTemperaturaYHumedad(temperatura, humedad);
-      }
+  /* clasificamos estados del suelo en 3 y seleccionamos el que corresponda en el arreglo de caracteres */
+  if (humedadDelSuelo > valorDelAgua && humedadDelSuelo < (valorDelAgua + intervalos)) {
+    Serial.println("Mojado");
+    selector = 2;
+  } else if (humedadDelSuelo > (valorDelAgua + intervalos) && humedadDelSuelo < (valorDelAire - intervalos)) {
+    Serial.println("Humedo");
+    selector = 1;
+  } else if (humedadDelSuelo < valorDelAire && humedadDelSuelo > (valorDelAire - intervalos)) {
+    Serial.println("Seco");
+    selector = 0;
+  }
+
+  /* alternamos la impresion de datos en la pantalla LCD cada 3 segundos */
+  if (contador >= 0 && contador <= 3) {
+    contador++;
+    /* verificamos que las lecturas esten dentro de rangos teoricamente normales e imprimimos en la pantalla LCD */
+    if (temperatura >= 0 && temperatura <= 50 && humedad >= 0 && humedad <= 100) {
+      imprimirTemperaturaYHumedad(temperatura, humedad);
     }
-    /* alternamos la impresion de datos en la pantalla LCD cada 3 segundos */
-    if (contador >= 4 && contador <= 6) {
-      contador++;
-      if (contador > 6) {                 
-        contador = 0;                     /* reiniciamos el contador para que se cumpla el ciclo de iteracion de 3 segundos  */
-      }
-      imprimirHumedadEnSuelo(selector);   /* imprimimos la humedad del suelo en la pantalla LCD */
+  }
+  /* alternamos la impresion de datos en la pantalla LCD cada 3 segundos */
+  if (contador >= 4 && contador <= 6) {
+    contador++;
+    if (contador > 6) {
+      contador = 0; /* reiniciamos el contador para que se cumpla el ciclo de iteracion de 3 segundos  */
     }
+    imprimirHumedadEnSuelo(selector); /* imprimimos la humedad del suelo en la pantalla LCD */
+  }
+  /* identificamos si la humedad en suelo es seco y activamos el riego en caso de ser cualquier otro estado se apaga la bomba de agua */
+  if (selector == 0) {
+    digitalWrite(agua, false);      /* recordar que los reles del modulo doble tienen los bits de activacion invertidos */
+  } else if (selector != 0) {
+    digitalWrite(agua, true);       /* recordar que los reles del modulo doble tienen los bits de activacion invertidos */
+  }
+  /* verificamos que el nivel de humedad en el ambiente sea mayor que 70 y activamos los extractores de aire */
+  if (humedad > 70) {
+    digitalWrite(extractor, false); /* recordar que los reles del modulo doble tienen los bits de activacion invertidos */
+  } else if (humedad <= 70) {       /* en caso de que la humedad sea la ideal (<70%RH) descativamos los extractores */
+    digitalWrite(extractor, true);  /* recordar que los reles del modulo doble tienen los bits de activacion invertidos */
   }
 }
